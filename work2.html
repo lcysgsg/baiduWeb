@@ -12,18 +12,7 @@
     <li>第一名：福州（样例），10</li>
       <li>第二名：福州（样例），10</li> -->
   </ul>
-<p id="test">aaaaaaaaaaa 
-  <span>test-span</span>
-  <span id="test-span2">test-span2</span>
-</p>
 <script type="text/javascript">
-var q = document.getElementById('test');
-var a = 11;
-var para=document.createElement("span");
-var node=document.createTextNode(a + "这是新段落。");
-para.appendChild(node);
-q.appendChild(para);
-
 var aqiData = [
   ["北京", 90],
   ["上海", 50],
@@ -48,7 +37,7 @@ var aqiData = [
   var n      = 1;
   for (var i = 0; i < aqiData.length; i++) {
     for (var j = 0; j < aqiData[i].length; j++) {
-      var listLi = document.createElement("li");
+      var listLi = document.createElement("li"); // 每次循环都应该创建一个li
       var content = document.createTextNode( '第' + n + '名' + ': ' + aqiData[i][0] + ' , ' + aqiData[i][1] ); // 创建内容
       listLi.appendChild(content);
       if ( aqiData[i][j] >= 60 ) 
