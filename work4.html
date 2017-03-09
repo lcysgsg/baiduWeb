@@ -1,100 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<title>Document</title>
-	<style>
-		#source{
-			margin:  5px;
-		}
-		#source li{
-			display:  inline-block;
-			min-width:  50px;
-			height:  30px;
-			background:  #aaa;
-			margin:  5px;
-			line-height:  30px;
-			text-align:  center;
-		}
-	</style>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        #ul{
+            margin:  5px;
+        }
+        #ul li{
+            display:  inline-block;
+            min-width:  50px;
+            height:  30px;
+            background:  #aaa;
+            margin:  5px;
+            line-height:  30px;
+            text-align:  center;
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
 <input type="text" id="content" autofocus />
-<button id="onLeft">左插入</button>
-<button id="onRight">右插入</button>
-<button id="removeLeft">左移除</button>
-<button id="removeRight">右移除</button>
-<ul id="source">
-</ul>
+<button id="inset_left">左插入</button>
+<button id="inset_right">右插入</button>
+<button id="outset_left">左移除</button>
+<button id="outset_right">右移除</button>
+<ul id="ul"></ul>
 
 <script>
-	function getValue(){
-		var content = document.getElementById('content').value;
-		if ( isNaN(content) || content.length === 0) { 
-			alert('请输入数字'); 
-			return false;
-		}else {			
-			return content;
-		}
-	}
-	function onRight(){
-		var onRightBtn = document.getElementById('onRight');
-		var source = document.getElementById('source');
-		onRightBtn.onclick = function (){
-			var cLi = document.createElement('li');
-			var textNode = document.createTextNode(getValue());
-			// 如果不判断，输入错误时 textNode 会等于 false
-			cLi.appendChild(textNode);
-			source.appendChild(cLi);
-			content.value = '';
-		};
-	}
-	onRight();
+////  注释的是自己写的烂代码..
+// 推荐下面那份代码
+    // function getValue(){
+    //     var content = document.getElementById('content').value;
+    //     if ( isNaN(content) || content.length === 0) { 
+    //         alert('请输入数字'); 
+    //         return false;
+    //     }else {         
+    //         return content;
+    //     }
+    // }
+    // function inset_right(){
+    //     var inset_rightBtn = document.getElementById('inset_right');
+    //     var ul = document.getElementById('ul');
+    //     inset_rightBtn.onclick = function (){
+    //         var cLi = document.createElement('li');
+    //         var textNode = document.createTextNode(getValue());
+    //         // 如果不判断，输入错误时 textNode 会等于 false
+    //         cLi.appendChild(textNode);
+    //         ul.appendChild(cLi);
+    //         content.value = '';
+    //         content.focus();
+    //     };
+    // }
+    // inset_right();
 
-	function onLeft(){
-		var onLeftBtn = document.getElementById('onLeft');
-		var source = document.getElementById('source');
-		onLeftBtn.onclick = function (){
-			var cLi = document.createElement('li');
-			var textNode = document.createTextNode(getValue());
-			
-			// 如果不判断，输入错误时 textNode 会等于 false
-			cLi.appendChild(textNode);
-			source.insertBefore(cLi,source.childNodes[0]);
-			content.value = '';
-		};
-	}
-	onLeft();
+    // function inset_left(){
+    //     var inset_leftBtn = document.getElementById('inset_left');
+    //     var ul = document.getElementById('ul');
+    //     inset_leftBtn.onclick = function (){
+    //         var cLi = document.createElement('li');
+    //         var textNode = document.createTextNode(getValue());
+            
+    //         // 如果不判断，输入错误时 textNode 会等于 false
+    //         cLi.appendChild(textNode);
+    //         ul.insertBefore(cLi,ul.childNodes[0]);
+    //         content.value = '';
+    //     };
+    // }
+    // inset_left();
 
-	function removeRight(){
-		var removeRightBtn = document.getElementById('removeRight');
-		var source = document.getElementById('source');
-		removeRightBtn.onclick = function (){
-			alert(source.lastChild.innerHTML);
-			source.removeChild(source.childNodes[source.childNodes.length-1]);
-			content.value = '';
-		};
-	}
-	removeRight();
-
-
-	function removeLeft(){
-		var removeLeftBtn = document.getElementById('removeLeft');
-		var source = document.getElementById('source');
-		removeLeftBtn.onclick = function (){
-			alert(source.childNodes[0].innerHTML);
-			source.removeChild(source.childNodes[0]);
-			content.value = '';
-		};
-	}
-	removeLeft();
+    // function outset_right(){
+    //     var outset_rightBtn = document.getElementById('outset_right');
+    //     var ul = document.getElementById('ul');
+    //     outset_rightBtn.onclick = function (){
+    //         alert(ul.lastChild.innerHTML);
+    //         ul.removeChild(ul.childNodes[ul.childNodes.length-1]);
+    //         content.value = '';
+    //     };
+    // }
+    // outset_right();
 
 
+    // function outset_left(){
+    //     var outset_leftBtn = document.getElementById('outset_left');
+    //     var ul = document.getElementById('ul');
+    //     outset_leftBtn.onclick = function (){
+    //         alert(ul.childNodes[0].innerHTML);
+    //         ul.removeChild(ul.childNodes[0]);
+    //         content.value = '';
+    //     };
+    // }
+    // outset_left();
 
-	function control(){
+//////////////////////////////////////////////
+ // @zhanghongtong
+// 原地址： https://github.com/zhanghongtong/IFE/blob/master/Task04.html
 
-	}
-	
+
+// 加入
+function inset(direction){
+    var text = document.getElementById('content').value;
+    // 判断
+    if ( isNaN(text) || text === '') {
+        alert('请输入数字');
+        return false;
+    }
+    var ul = document.getElementById('ul').innerHTML;
+    if ( direction == 'left') {
+        ul = '<li>' + text + '</li>' + ul;
+    } else if( direction == 'right'){
+        ul = ul + '<li>' + text + '</li>';
+    }
+    document.getElementById('ul').innerHTML = ul;
+    // 添加一次后 清空value
+    // 这里用 text='' 的话不会清空value
+    // 应该用 document.get....
+    document.getElementById('content').value = '';
+    // 添加一次后光标定回去
+    document.getElementById('content').focus();
+    //
+    del();
+}
+
+// 删除
+function outset(direction){
+    // 用 .children 选择中 ul 下的 li
+    var li = document.getElementById('ul').children;
+    // 创建data 数组保存li
+    var data = [];
+    for (var i = 0; i < li.length ; i++) {
+        data[i] = li[i].innerHTML;
+    }
+    // 判断 左出 还 右出
+    if (direction == 'left') {
+        // shift() 删除数组第一个值，并返回
+        alert(data.shift()); 
+    }else if (direction == 'right'){
+        // pop() 删除数组最后一个值，并返回
+        alert(data.pop());
+    }
+    var arr = '';
+    for (var j = 0; j < data.length ; j++) {
+        arr += '<li>' + data[j] + '</li>';
+    }
+    document.getElementById('ul').innerHTML = arr;
+    //
+    del();
+}
+
+
+function del(){
+    var del = document.getElementsByTagName('li');
+    for (var i = 0; i < del.length ; i++) {
+        del[i].addEventListener('click', function(){
+            this.parentNode.removeChild(this);
+        });
+    }
+}
+
+
+function init(){
+    // 左入
+    var btnInsetLeft = document.getElementById('inset_left');
+    btnInsetLeft.addEventListener('click', function(){
+        inset('left');
+        // del();
+    });
+    // 右入
+    var btnInsetRight = document.getElementById('inset_right');
+    btnInsetRight.addEventListener('click', function(){
+        inset('right');
+        // del();
+    });
+    // 左出
+    var btnOutsetLeft = document.getElementById('outset_left');
+    btnOutsetLeft.addEventListener('click', function(){
+        outset('left');
+        // del();
+    });
+    // 右出
+    var btnOutsetRight = document.getElementById('outset_right');
+    btnOutsetRight.addEventListener('click', function(){
+        outset('right');
+        // del();
+    });
+}
+init();
+
 </script>
 </body>
 </html>
