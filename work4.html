@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		#source{
+			margin:  5px;
+		}
+		#source li{
+			display:  inline-block;
+			min-width:  50px;
+			height:  30px;
+			background:  #aaa;
+			margin:  5px;
+			line-height:  30px;
+			text-align:  center;
+		}
+	</style>
+</head>
+<body>
+<input type="text" id="content" autofocus />
+<button id="onLeft">左插入</button>
+<button id="onRight">右插入</button>
+<button id="removeLeft">左移除</button>
+<button id="removeRight">右移除</button>
+<ul id="source">
+</ul>
+
+<script>
+	function getValue(){
+		var content = document.getElementById('content').value;
+		console.log(content);
+		if ( isNaN(content) || content.length == 0) { 
+			alert('请输入数字'); 
+			return false;
+		}else {			
+			return content;
+		}
+	}
+	function onRight(){
+		var onRightBtn = document.getElementById('onRight');
+		var source = document.getElementById('source');
+		onRightBtn.onclick = function (){
+			var cLi = document.createElement('li');
+			var textNode = document.createTextNode(getValue());
+			
+			// 如果不判断，输入错误时 textNode 会等于 false
+			cLi.appendChild(textNode);
+			source.appendChild(cLi);
+			content.value = '';
+		}
+	}
+	onRight();
+
+	function onLeft(){
+		var onLeftBtn = document.getElementById('onLeft');
+		var source = document.getElementById('source');
+		onLeftBtn.onclick = function (){
+			var cLi = document.createElement('li');
+			var textNode = document.createTextNode(getValue());
+			
+			// 如果不判断，输入错误时 textNode 会等于 false
+			cLi.appendChild(textNode);
+			source.insertBefore(cLi,source.childNodes[0]);
+			content.value = '';
+		}
+	}
+	onLeft();
+
+	function removeRight(){
+		var removeRightBtn = document.getElementById('removeRight');
+		var source = document.getElementById('source');
+		removeRightBtn.onclick = function (){
+			console.log('左移除：'  );
+			source.removeChild(source.childNodes[source.childNodes.length-1]);
+			content.value = '';
+		}
+	}
+	removeRight();
+
+
+	function removeLeft(){
+		var removeLeftBtn = document.getElementById('removeLeft');
+		var source = document.getElementById('source');
+		removeLeftBtn.onclick = function (){
+			source.removeChild(source.childNodes[0]);
+			content.value = '';
+		}
+	}
+	removeLeft();
+
+
+
+	function control(){
+
+	}
+</script>
+</body>
+</html>
