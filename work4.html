@@ -30,8 +30,7 @@
 <script>
 	function getValue(){
 		var content = document.getElementById('content').value;
-		console.log(content);
-		if ( isNaN(content) || content.length == 0) { 
+		if ( isNaN(content) || content.length === 0) { 
 			alert('请输入数字'); 
 			return false;
 		}else {			
@@ -44,12 +43,11 @@
 		onRightBtn.onclick = function (){
 			var cLi = document.createElement('li');
 			var textNode = document.createTextNode(getValue());
-			
 			// 如果不判断，输入错误时 textNode 会等于 false
 			cLi.appendChild(textNode);
 			source.appendChild(cLi);
 			content.value = '';
-		}
+		};
 	}
 	onRight();
 
@@ -64,7 +62,7 @@
 			cLi.appendChild(textNode);
 			source.insertBefore(cLi,source.childNodes[0]);
 			content.value = '';
-		}
+		};
 	}
 	onLeft();
 
@@ -72,10 +70,10 @@
 		var removeRightBtn = document.getElementById('removeRight');
 		var source = document.getElementById('source');
 		removeRightBtn.onclick = function (){
-			console.log('左移除：'  );
+			alert(source.lastChild.innerHTML);
 			source.removeChild(source.childNodes[source.childNodes.length-1]);
 			content.value = '';
-		}
+		};
 	}
 	removeRight();
 
@@ -84,9 +82,10 @@
 		var removeLeftBtn = document.getElementById('removeLeft');
 		var source = document.getElementById('source');
 		removeLeftBtn.onclick = function (){
+			alert(source.childNodes[0].innerHTML);
 			source.removeChild(source.childNodes[0]);
 			content.value = '';
-		}
+		};
 	}
 	removeLeft();
 
@@ -95,6 +94,7 @@
 	function control(){
 
 	}
+	
 </script>
 </body>
 </html>
