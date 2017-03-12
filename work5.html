@@ -6,15 +6,13 @@
     <style>
         #ul{
             margin:  5px;
+            list-style: none;
         }
         #ul li{
-            display:  inline-block;
-            min-width:  50px;
-            height:  30px;
+            float: left;
+            width:  25px;
             background:  #aaa;
             margin:  5px;
-            line-height:  30px;
-            text-align:  center;
             cursor: pointer;
         }
     </style>
@@ -26,6 +24,7 @@
 <button id="inset_right">右插入</button>
 <button id="outset_left">左移除</button>
 <button id="outset_right">右移除</button>
+<button id="sort">排序</button>
 <ul id="ul"></ul>
 
 <script>
@@ -33,21 +32,31 @@
 
 // 加入
 function inset(direction){
+    // 用 .children 选择中 ul 下的 li
+    var li = document.getElementById('ul').children;
+    // 判断li 队列数
+    if ( li.length > 60) { 
+        alert('队列至多60个'); 
+        return false;
+    }
     var text = document.getElementById('content').value;
     // 判断
     if ( isNaN(text) || text === '') {
         alert('请输入数字');
         return false;
     } else if( text >= 100 || text <= 10){
-    	alert('请输入10-100的数字');
-    	return false;
+        alert('请输入10-100的数字');
+        return false;
     }
+    // 保存高度
+    var highPx = text + 'px';
     var ul = document.getElementById('ul').innerHTML;
     if ( direction == 'left') {
-        ul = '<li>' + text + '</li>' + ul;
+        ul = '<li style="height:'+ highPx +'">'  + '</li>' + ul;
     } else if( direction == 'right'){
-        ul = ul + '<li>' + text + '</li>';
+        ul = ul + '<li style="height:'+ highPx +'">'  + '</li>';
     }
+    console.log(ul);
     document.getElementById('ul').innerHTML = ul;
     // 添加一次后 清空value
     // 这里用 text='' 的话不会清空value
@@ -56,7 +65,8 @@ function inset(direction){
     // 添加一次后光标定回去
     document.getElementById('content').focus();
     //
-    del();
+    // formatting(data);
+    // del();
 }
 
 // 删除
@@ -65,70 +75,99 @@ function outset(direction){
     var li = document.getElementById('ul').children;
     // 创建data 数组保存li
     var data = [];
-    // 判断li 队列数
-    if ( li.length > 60) { 
-    	alert('队列至多60个'); 
-    	return false;
-    }
     for (var i = 0; i < li.length ; i++) {
-        data[i] = li[i].innerHTML;
+        data[i] = li[i].style.height;
     }
-
+    var move;
     // 判断 左出 还 右出
     if (direction == 'left') {
         // shift() 删除数组第一个值，并返回
-        alert(data.shift()); 
+         move = data.shift();
     }else if (direction == 'right'){
         // pop() 删除数组最后一个值，并返回
-        alert(data.pop());
+         move = data.pop();
     }
-    var arr = '';
-    for (var j = 0; j < data.length ; j++) {
-        arr += '<li>' + data[j] + '</li>';
-    }
-    document.getElementById('ul').innerHTML = arr;
-    //
-    del();
+    alert(move.slice(0,-2));
+    formatting(data);
 }
+
 
 
 function del(){
     var del = document.getElementsByTagName('li');
     for (var i = 0; i < del.length ; i++) {
-        del[i].addEventListener('click', function(){
+        del[i].addEventListener('click', function (){
             this.parentNode.removeChild(this);
         });
     }
 }
 
 
-function init(){
+function formatting(data){
+    var arr = '';
+    for (var i = 0; i <= data.length - 1; i++) {
+        arr += '<li style="height:' + data[i] + '"></li>';
+    }
+    document.getElementById('ul').innerHTML = arr;
+    document.getElementById('content').value = '';
+    // del();
+}
+
+function bubbleSort(){
+    var li    = document.getElementById('ul').children;
+    var items = [];
+    for (var i = 0; i < li.length; i++) {
+        items[i] = li[i].style.height.slice(0,-2);
+    }
+    for (var j = 0; j < items.length; j++) {
+        for (var l = 0; l < items.length - j; l++) {
+            if ( items[l] > items[l+1] ){
+                var temp   = items[l];
+                items[l]   = items[l+1];
+                items[l+1] = temp;
+            }
+        }
+    }
+    // items 是去除了'px'的，应该要加回去
+    var data = [];
+    for (var k = 0; k < li.length; k++) {
+        data[k] = items[k]+'px';
+    }
+    formatting(data);
+}
+
+
+(function (){
     // 左入
     var btnInsetLeft = document.getElementById('inset_left');
     btnInsetLeft.addEventListener('click', function(){
         inset('left');
-        // del();
+        del();
     });
     // 右入
     var btnInsetRight = document.getElementById('inset_right');
     btnInsetRight.addEventListener('click', function(){
         inset('right');
-        // del();
+        del();
     });
     // 左出
     var btnOutsetLeft = document.getElementById('outset_left');
     btnOutsetLeft.addEventListener('click', function(){
         outset('left');
-        // del();
+        del();
     });
     // 右出
     var btnOutsetRight = document.getElementById('outset_right');
     btnOutsetRight.addEventListener('click', function(){
         outset('right');
-        // del();
+        del();
     });
-}
-init();
+    // 排序
+    var btnSort = document.getElementById('sort');
+    btnSort.addEventListener('click',function(){
+        bubbleSort();
+    });
+})();
 
 </script>
 </body>
