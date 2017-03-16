@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <style>
+        #ul{
+            margin:  5px;
+        }
+        #ul li{
+            display:  inline-block;
+            min-width:  50px;
+            height:  30px;
+            background:  #eee;
+            margin:  5px;
+            line-height:  30px;
+            text-align:  center;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<textarea name="" cols="15" rows="3" id="content" autofocus></textarea> 
+<button id="inset_left">左插入</button>
+<button id="inset_right">右插入</button>
+<button id="outset_left">左移除</button>
+<button id="outset_right">右移除</button>
+<input type="text" id="text_search" />
+<button id="btn_search">搜索</button>
+<ul id="ul"></ul>
+
+<script>
+// 搜索
+function blurSearch(keyword){
+    var liValue = document.getElementById('ul').children;
+    for (var i = 0; i < liValue.length; i++) {
+        if ( liValue[i].innerHTML.indexOf(keyword) != -1) {
+            liValue[i].innerHTML = liValue[i].innerHTML.replace(keyword,'<span style="color:red;">'+ keyword +'</span>');
+        }
+    }
+}
+
+// 加入
+function inset(direction){
+    var text = document.getElementById('content').value;
+    var arrText = text.split(/[.，，,、\s\n]/);
+    var ul = document.getElementById('ul').innerHTML;
+    for (var i = 0; i < arrText.length; i++) {
+        if ( direction == 'left') {
+            ul = '<li>' + arrText[i] + '</li>' + ul;
+        } else if( direction == 'right'){
+            ul = ul + '<li>' + arrText[i] + '</li>';
+        }
+    }
+    document.getElementById('ul').innerHTML = ul;
+    // 添加一次后 清空value
+    // 这里用 text='' 的话不会清空value
+    // 应该用 document.get....
+    document.getElementById('content').value = '';
+    // 添加一次后光标定回去
+    document.getElementById('content').focus();
+    //
+    del();
+}
+
+// 删除
+function outset(direction){
+    // 用 .children 选择中 ul 下的 li
+    var li = document.getElementById('ul').children;
+    // 创建data 数组保存li
+    var data = [];
+    for (var i = 0; i < li.length ; i++) {
+        data[i] = li[i].innerHTML;
+    }
+    // 判断 左出 还 右出
+    if (direction == 'left') {
+        // shift() 删除数组第一个值，并返回
+        alert(data.shift()); 
+    }else if (direction == 'right'){
+        // pop() 删除数组最后一个值，并返回
+        alert(data.pop());
+    }
+    var arr = '';
+    for (var j = 0; j < data.length; j++) {
+        arr += '<li>' + data[j] + '</li>';
+    }
+    document.getElementById('ul').innerHTML = arr;
+    //
+    del();
+}
+
+
+function del(){
+    var del = document.getElementsByTagName('li');
+    for (var i = 0; i < del.length ; i++) {
+        del[i].addEventListener('click', function(){
+            this.parentNode.removeChild(this);
+        });
+    }
+}
+
+
+function init(){
+    // 左入
+    var btnInsetLeft = document.getElementById('inset_left');
+    btnInsetLeft.addEventListener('click', function(){
+        inset('left');
+        // del();
+    });
+    // 右入
+    var btnInsetRight = document.getElementById('inset_right');
+    btnInsetRight.addEventListener('click', function(){
+        inset('right');
+        // del();
+    });
+    // 左出
+    var btnOutsetLeft = document.getElementById('outset_left');
+    btnOutsetLeft.addEventListener('click', function(){
+        outset('left');
+        // del();
+    });
+    // 右出
+    var btnOutsetRight = document.getElementById('outset_right');
+    btnOutsetRight.addEventListener('click', function(){
+        outset('right');
+        // del();
+    });
+    // 搜索
+    var btnSearch = document.getElementById('btn_search');
+    btnSearch.addEventListener('click',function(){
+        var keyword = document.getElementById('text_search').value;
+        console.log(keyword);
+        blurSearch(keyword);
+    });
+}
+init();
+
+</script>
+</body>
+</html>
